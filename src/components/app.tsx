@@ -7,6 +7,9 @@ import NotFoundPage from '../routes/notfound';
 import Header from './header';
 import { authService } from '../modules/auth/AuthService';
 import { useEffect } from 'preact/hooks';
+import { getLogger } from '../modules/logger';
+
+const log = getLogger('app');
 
 const App: FunctionalComponent = () => {
 
@@ -18,16 +21,15 @@ const App: FunctionalComponent = () => {
         const handler = () => authService.handleVisibilityChange();
         document.addEventListener("visibilitychange", handler);
         return () => document.removeEventListener("visibilitychange", handler);
-    });
+    });{}
 
-    const handleRoute = async ({url}: RouterOnChangeArgs) => {
+    const handleRoute = async ({url, previous}: RouterOnChangeArgs) => {
+        log.debug('onRouteChange', {url, previous});
         // refresh token on nav and handle login redirect
         const redirect = await authService.handleRouteChange(url);
         if (redirect) {
             route(redirect, true);
-            return;
-        }
-        if (url === '/' && authService.isLoggedIn()) {
+        } else if (url === '/' && authService.isLoggedIn()) {
             route('/start', true);
         }
     };
