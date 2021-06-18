@@ -1,22 +1,24 @@
 import { FunctionalComponent, h } from 'preact';
 import { Link } from 'preact-router/match';
+import { Page } from '../../api/usePages';
 import { authService } from '../../modules/auth/AuthService';
 import style from './style.css';
 
-const Header: FunctionalComponent = () => {
+const Header: FunctionalComponent<{ pages: Page[]}> = ({ pages }) => {
     return (
         <header class={style.header}>
             <h1>Tolu Video Shack</h1>
             <nav>
-                <Link activeClassName={style.active} href="/">
-                    Home
-                </Link>
-                <Link activeClassName={style.active} href="/profile">
-                    Me
-                </Link>
-                <Link activeClassName={style.active} href="/profile/john">
-                    John
-                </Link>
+                { !authService.isLoggedIn() &&
+                    <Link activeClassName={style.active} href="/">
+                        Home
+                    </Link>
+                }
+                { pages.map(p => (
+                    <Link activeClassName={style.active} href={`/page/${p.slug}`} key={p.slug} >
+                    {p.name}
+                    </Link>
+                )) }
                 <LoginButton />
             </nav>
         </header>

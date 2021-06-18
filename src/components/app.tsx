@@ -2,19 +2,21 @@ import { FunctionalComponent, h } from 'preact';
 import { route, Route, Router, RouterOnChangeArgs } from 'preact-router';
 
 import Home from '../routes/home';
-import Profile from '../routes/profile';
+import Page from '../routes/page';
 import NotFoundPage from '../routes/notfound';
 import Header from './header';
 import { authService } from '../modules/auth/AuthService';
 import { useEffect } from 'preact/hooks';
 import { getLogger } from '../modules/logger';
+import { usePages } from '../api/usePages';
 
 const log = getLogger('app');
 
 const App: FunctionalComponent = () => {
 
     authService.init();
-
+    const { pages, error } = usePages();
+    
     // setup visibility changed in an effect
     // so that we remove listener for HMR updates
     useEffect(() => {
@@ -30,18 +32,21 @@ const App: FunctionalComponent = () => {
         if (redirect) {
             route(redirect, true);
         } else if (url === '/' && authService.isLoggedIn()) {
-            route('/start', true);
+            route('/page/start', true);
         }
     };
 
     return (
         <div id="preact_root">
-            <Header />
+            <Header pages={pages || []} />
             <Router onChange={handleRoute}>
                 <Route path="/" component={Home} />
-                <Route path="/start/" component={Profile} user="me" />
-                <Route path="/profile/:user" component={Profile} />
-                <NotFoundPage default />
+                {(pages || []).map(p => (
+
+                <Route path={`/page/${p.slug}`} component={Page} page={p} key={p.slug} />
+                
+                ))}
+                { error && !pages && <NotFoundPage default /> }
             </Router>
         </div>
     );
