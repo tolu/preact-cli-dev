@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "strim-preact",
+  "name": "video-app-preact",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {

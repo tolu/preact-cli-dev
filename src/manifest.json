@@ -1,6 +1,6 @@
 {
-  "name": "strim-preact",
-  "short_name": "strim-preact",
+  "name": "video-app-preact",
+  "short_name": "video-app-preact",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
