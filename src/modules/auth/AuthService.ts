@@ -29,7 +29,7 @@ class AuthService {
   private userManager: Readonly<UserManager>;
   private token: JwtToken = new JwtToken(null);
   private redirectUrl: Readonly<URL>;
-  private onLoginRedirect: Readonly<boolean>;
+  private onLoginRedirect: boolean;
 
   constructor() {
     const overrides = {
@@ -97,6 +97,7 @@ class AuthService {
 
   async handleRouteChange(url: string): Promise<string|null> {
     if (this.onLoginRedirect) {
+      this.onLoginRedirect = false;
       return await this.handleAuthorizationCallback();
     }
     if (this.shouldRefreshExistingToken()) {
@@ -142,6 +143,7 @@ class AuthService {
   }
 
   private async handleAuthorizationCallback() {
+    log.info('handleAuthorizationCallback');
     try {
       const user = await this.userManager.signinRedirectCallback();
       log.info('login callback', user);
