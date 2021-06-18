@@ -1,4 +1,4 @@
-# strim-preact
+# video-app-preact
 
 ## CLI Commands
 
