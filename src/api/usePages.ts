@@ -1,8 +1,8 @@
-import { useEffect, useState } from "preact/hooks";
-import { getLogger } from "../modules/logger";
-import { useJson } from "./utils";
+import { useEffect } from "preact/hooks";
+import { useCachedState } from "./utils.cache";
+import { useJson } from "./utils.fetch";
 
-export interface Page {
+export interface PageBase {
   readonly link: string; // "https://contentlayout.test.rikstv.no/1/pages/33a1964f-f6f0-46c5-b8d4-f22d97259321"
   readonly name: string; // "Start"
   readonly slug: string; // "start"
@@ -10,20 +10,16 @@ export interface Page {
   // readonly id: string; //"33a1964f-f6f0-46c5-b8d4-f22d97259321"
 }
 
-const log = getLogger('pages');
-const defaultState = (): Page[] | null => JSON.parse(sessionStorage.getItem('app.pages') || 'null');
+export const usePages = (): { pages: PageBase[] | undefined, error: string | undefined } => {
 
-export const usePages = (): { pages: Page[] | undefined, error: string | undefined } => {
-  const [pages, setPages] = useState( defaultState() ?? undefined );
-  log.debug('usePages', { cached: pages });
-  const { data, error } = useJson<Page[]>('https://contentlayout.test.rikstv.no/1/pages', () => pages);
+  const [pages, setPages] = useCachedState<PageBase[]>('app.pages', sessionStorage);
+
+  const { data, error } = useJson<PageBase[]>('https://contentlayout.test.rikstv.no/1/pages', () => pages);
   useEffect(() => {
     if (data) {
-      const mappedData = data.map(d => ({link: d.link,name: d.name,slug: d.slug}));
-      setPages(mappedData);
-      sessionStorage.setItem('app.pages', JSON.stringify(mappedData));
+      setPages(data);
     }
-  }, [data]);
+  }, [data, setPages]);
 
   return { pages, error };
 }
