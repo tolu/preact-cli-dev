@@ -5,10 +5,12 @@
   "license": "MIT",
   "scripts": {
     "build": "preact build",
-    "serve": "sirv build --port 40801 --cors --single --https",
+    "serve": "sirv build --port 40801 --cors --single",
+    "serve-https": "sirv build --port 40801 --cors --single --http2 --cert certs/cert.pem --key certs/key.pem",
     "dev": "preact watch -p 40801 --https",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
-    "test": "jest ./tests"
+    "test": "jest ./tests",
+    "gen-certs": "mkcert -cert-file certs/cert.pem -key-file certs/key.pem localhost 127.0.0.1 ::1"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",

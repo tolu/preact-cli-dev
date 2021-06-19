@@ -2,3 +2,6 @@ node_modules
 /build
 /*.log
 *.local
+/certs
+# note sure what this is, generated on build
+size-plugin.json

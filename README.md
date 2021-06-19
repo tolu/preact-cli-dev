@@ -1,5 +1,11 @@
 # video-app-preact
 
+### Testing prod-build on https://localhost
+
+1. Install [mkcert](https://github.com/FiloSottile/mkcert)
+2. Generate certificates with `npm run gen-certs`
+3. Run `npm run serve-https`
+
 ## CLI Commands
 
 * `npm install`: Installs dependencies
