@@ -1,5 +1,6 @@
 // TODO (@tolu): import from oidc-client/lib to get ES6
 import { UserManager } from 'oidc-client';
+import { DOM } from '../modules/DOM';
 
 import { getLogger } from '../modules/logger';
 
@@ -13,7 +14,7 @@ if (!SCOPE || !CLIENT_ID || !AUTHORITY) {
 
 const config = {
   auth: {
-    oauthRedirectURL: `${window.location.origin}/app/post-login`,
+    oauthRedirectURL: `${DOM.location.origin}/app/post-login`,
     stsUrl: AUTHORITY,
     scope: SCOPE,
   }
@@ -33,8 +34,8 @@ class AuthService {
 
   constructor() {
     const overrides = {
-      notificationTime: parseFloat(sessionStorage.getItem('config.auth.time') || '') || null,
-      monitorSession: sessionStorage.getItem('config.auth.monitorSession') != null || null,
+      notificationTime: parseFloat(DOM.sessionStorage.getItem('config.auth.time') || '') || null,
+      monitorSession: DOM.sessionStorage.getItem('config.auth.monitorSession') != null || null,
     };
 
     this.redirectUrl = new URL(config.auth.oauthRedirectURL);
@@ -55,14 +56,16 @@ class AuthService {
       // this.redirectToAuthServer();
     });
 
-    this.onLoginRedirect = window.location.pathname.toLowerCase() === this.redirectUrl.pathname.toLowerCase();
+    this.onLoginRedirect = DOM.location.pathname.toLowerCase() === this.redirectUrl.pathname.toLowerCase();
   }
 
   init() {
     if (!this.onLoginRedirect) {
       // Get and decode token from localStorage
       this.token = new JwtToken(this.getPersistedToken());
-      dispatchEvent(new CustomEvent('auth.changed'));
+      if (this.token.isTokenValid()) {
+        DOM.dispatchEvent(new CustomEvent('auth.changed'));
+      }
   
       // Check if we should refresh
       if (this.shouldRefreshExistingToken()) {
@@ -108,16 +111,16 @@ class AuthService {
   }
 
   logout() {
-    localStorage.removeItem(_tokenKey);
+    DOM.localStorage.removeItem(_tokenKey);
     const args = {
-      id_token_hint: localStorage.getItem(_idTokenKey),
-      post_logout_redirect_uri: window.location.origin,
+      id_token_hint: DOM.localStorage.getItem(_idTokenKey),
+      post_logout_redirect_uri: DOM.location.origin,
     };
     this.userManager.signoutRedirect(args);
   }
 
-  login(redirect = window.location.pathname) {
-    localStorage.setItem(_loginAttemptTimeKey, Date.now().toString());
+  login(redirect = DOM.location.pathname) {
+    DOM.localStorage.setItem(_loginAttemptTimeKey, Date.now().toString());
     this.redirectToAuthServer(redirect);
   }
 
@@ -130,18 +133,18 @@ class AuthService {
   // PRIVATE PARTS
 
   private setToken(access_token: string, fromCallback = false) {
-    localStorage.setItem(_tokenKey, access_token);
+    DOM.localStorage.setItem(_tokenKey, access_token);
     this.token = new JwtToken(access_token, fromCallback);
-    dispatchEvent(new CustomEvent('auth.changed'));
+    DOM.dispatchEvent(new CustomEvent('auth.changed'));
   }
 
-  private redirectToAuthServer(redirect = window.location.pathname) {
+  private redirectToAuthServer(redirect = DOM.location.pathname) {
     log.info('redirecting to auth server...');
     this.userManager.signinRedirect({ state: redirect });
   }
 
   private getPersistedToken() {
-    return localStorage.getItem(_tokenKey);
+    return DOM.localStorage.getItem(_tokenKey);
   }
 
   private async handleAuthorizationCallback() {
@@ -150,7 +153,7 @@ class AuthService {
       const user = await this.userManager.signinRedirectCallback();
       log.info('login callback', user);
       const { access_token, state, id_token } = user;
-      localStorage.setItem(_idTokenKey, id_token);
+      DOM.localStorage.setItem(_idTokenKey, id_token);
       this.setToken(access_token, true);
       
       return state || '/';

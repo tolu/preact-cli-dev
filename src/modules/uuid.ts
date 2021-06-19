@@ -1,3 +1,5 @@
+import { DOM } from "./DOM";
+
 // https://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid
 export const createUuidV4 = (): Readonly<string> => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -7,10 +9,10 @@ export const createUuidV4 = (): Readonly<string> => {
 }
 
 const getDeviceId = () => {
-  let deviceId = localStorage.getItem('app.deviceId');
+  let deviceId = DOM.localStorage.getItem('app.deviceId');
   if (deviceId === null) {
     deviceId = createUuidV4();
-    localStorage.setItem('app.deviceId', deviceId);
+    DOM.localStorage.setItem('app.deviceId', deviceId);
   }
   return deviceId;
 }

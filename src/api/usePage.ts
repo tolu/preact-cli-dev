@@ -1,4 +1,5 @@
 import { useEffect } from "preact/hooks";
+import { DOM } from "../modules/DOM";
 import { PageBase } from "./usePages";
 import { useCachedState } from "./utils.cache";
 import { useJson } from "./utils.fetch";
@@ -17,7 +18,7 @@ export interface Page extends PageBase {
 
 export const usePage = (url: string): { page: Page | undefined, error: string | undefined } => {
 
-  const [page, setPage] = useCachedState<Page>(url, sessionStorage);
+  const [page, setPage] = useCachedState<Page>(url, DOM.sessionStorage);
 
   const { data, error } = useJson<Page>(url, () => page);
   useEffect(() => {

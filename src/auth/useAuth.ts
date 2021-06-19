@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "preact/hooks"
+import { DOM } from "../modules/DOM";
 import { getLogger } from "../modules/logger";
 import { authService } from "./AuthService";
 
@@ -23,8 +24,8 @@ export const useAuth = () => {
   }, [user, setUser]);
 
   useEffect(() => {
-    addEventListener('auth.changed', handleChange);
-    return () => removeEventListener('auth.changed', handleChange);
+    DOM.addEventListener('auth.changed', handleChange);
+    return () => DOM.removeEventListener('auth.changed', handleChange);
   }, [handleChange]);
 
   return user;
