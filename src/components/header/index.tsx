@@ -1,10 +1,10 @@
 import { FunctionalComponent, h } from 'preact';
 import { Link } from 'preact-router/match';
-import { Page } from '../../api/usePages';
+import { PageBase } from '../../api/usePages';
 import { authService } from '../../modules/auth/AuthService';
 import style from './style.css';
 
-const Header: FunctionalComponent<{ pages: Page[]}> = ({ pages }) => {
+const Header: FunctionalComponent<{ pages: PageBase[]}> = ({ pages }) => {
     return (
         <header class={style.header}>
             <h1>Tolu Video Shack</h1>
