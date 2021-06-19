@@ -1,7 +1,7 @@
 // TODO (@tolu): import from oidc-client/lib to get ES6
 import { UserManager } from 'oidc-client';
 
-import { getLogger } from '../logger';
+import { getLogger } from '../modules/logger';
 
 import { JwtToken } from './JwtToken';
 
@@ -62,6 +62,7 @@ class AuthService {
     if (!this.onLoginRedirect) {
       // Get and decode token from localStorage
       this.token = new JwtToken(this.getPersistedToken());
+      dispatchEvent(new CustomEvent('auth.changed'));
   
       // Check if we should refresh
       if (this.shouldRefreshExistingToken()) {
@@ -131,6 +132,7 @@ class AuthService {
   private setToken(access_token: string, fromCallback = false) {
     localStorage.setItem(_tokenKey, access_token);
     this.token = new JwtToken(access_token, fromCallback);
+    dispatchEvent(new CustomEvent('auth.changed'));
   }
 
   private redirectToAuthServer(redirect = window.location.pathname) {

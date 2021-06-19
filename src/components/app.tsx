@@ -5,10 +5,12 @@ import Home from '../routes/home';
 import Page from '../routes/page';
 import NotFoundPage from '../routes/notfound';
 import Header from './header';
-import { authService } from '../modules/auth/AuthService';
+import { authService } from '../auth/AuthService';
 import { useEffect } from 'preact/hooks';
 import { getLogger } from '../modules/logger';
 import { usePages } from '../api/usePages';
+import { UserContext } from '../auth/UserContext';
+import { useAuth } from '../auth/useAuth';
 
 const log = getLogger('app');
 
@@ -16,6 +18,7 @@ const App: FunctionalComponent = () => {
 
     authService.init();
     const { pages, error } = usePages();
+    const user = useAuth();
     
     // setup visibility changed in an effect
     // so that we remove listener for HMR updates
@@ -38,16 +41,18 @@ const App: FunctionalComponent = () => {
 
     return (
         <div id="preact_root">
-            <Header pages={pages || []} />
-            <Router onChange={handleRoute}>
-                <Route path="/" component={Home} />
-                {(pages || []).map(p => (
+            <UserContext.Provider value={ user }>
+                <Header pages={pages || []} />
+                <Router onChange={handleRoute}>
+                    <Route path="/" component={Home} />
+                    {(pages || []).map(p => (
 
-                <Route path={`/page/${p.slug}`} component={Page} page={p} key={p.slug} />
-                
-                ))}
-                { error && !pages && <NotFoundPage default /> }
-            </Router>
+                    <Route path={`/page/${p.slug}`} component={Page} page={p} key={p.slug} />
+                    
+                    ))}
+                    { error && !pages && <NotFoundPage default /> }
+                </Router>
+            </UserContext.Provider>
         </div>
     );
 };

@@ -1,6 +1,5 @@
 import jwtDecode from 'jwt-decode';
-
-import { getLogger } from '../logger';
+import { getLogger } from '../modules/logger';
 
 const log = getLogger('auth');
 interface RtvToken {

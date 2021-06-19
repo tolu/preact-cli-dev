@@ -1,15 +1,18 @@
 import { FunctionalComponent, h } from 'preact';
 import { Link } from 'preact-router/match';
+import { useContext } from 'preact/hooks';
 import { PageBase } from '../../api/usePages';
-import { authService } from '../../modules/auth/AuthService';
+import { authService } from '../../auth/AuthService';
+import { UserContext } from '../../auth/UserContext';
 import style from './style.css';
 
-const Header: FunctionalComponent<{ pages: PageBase[]}> = ({ pages }) => {
+const Header: FunctionalComponent<{ pages: PageBase[] }> = ({ pages }) => {
+    const { isLoggedIn } = useContext(UserContext);
     return (
         <header class={style.header}>
             <h1>Tolu Video Shack</h1>
             <nav>
-                { !authService.isLoggedIn() &&
+                { !isLoggedIn &&
                     <Link activeClassName={style.active} href="/">
                         Home
                     </Link>
@@ -19,14 +22,14 @@ const Header: FunctionalComponent<{ pages: PageBase[]}> = ({ pages }) => {
                     {p.name}
                     </Link>
                 )) }
-                <LoginButton />
+                <LoginButton isLoggedIn={isLoggedIn} />
             </nav>
         </header>
     );
 };
 
-const LoginButton: FunctionalComponent = () => {
-    const loggedIn = authService.isLoggedIn();
+const LoginButton: FunctionalComponent<{isLoggedIn: boolean}> = ({isLoggedIn}) => {
+    const loggedIn = isLoggedIn;
     const label = loggedIn ? '🤩' : 'Log in';
     const title = loggedIn ? 'Log out' : label;
     const handleClick: h.JSX.MouseEventHandler<HTMLButtonElement> = (event) => {
