@@ -25,16 +25,20 @@ export class JwtToken {
 
   constructor(token: string | null, fromCallback = false) {
     if (token) {
-      this.rawToken = token;
-      this.decodedToken = jwtDecode<RtvToken>(token);
-      // do we have a expiry?
-      if (this.decodedToken?.exp) {
-        const expDate = new Date(0);
-        expDate.setUTCSeconds(this.decodedToken.exp);
-        this.expiresEpoch = expDate.getTime();
-        if (!fromCallback) {
-          log.info(`auth: jwtToken expires: ${expDate.toLocaleTimeString()}`, this.decodedToken);
+      try {
+        this.decodedToken = jwtDecode<RtvToken>(token);
+        this.rawToken = token;
+        // do we have a expiry?
+        if (this.decodedToken?.exp) {
+          const expDate = new Date(0);
+          expDate.setUTCSeconds(this.decodedToken.exp);
+          this.expiresEpoch = expDate.getTime();
+          if (!fromCallback) {
+            log.info(`auth: jwtToken expires: ${expDate.toLocaleTimeString()}`, this.decodedToken);
+          }
         }
+      } catch (err) {
+        log.error('Failed to decode token', { token, err });
       }
     }
   }

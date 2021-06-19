@@ -119,6 +119,10 @@ class AuthService {
     this.userManager.signoutRedirect(args);
   }
 
+  logoutLocal() {
+    this.userManager.removeUser().then(() => this.setToken(null));
+  }
+
   login(redirect = DOM.location.pathname) {
     DOM.localStorage.setItem(_loginAttemptTimeKey, Date.now().toString());
     this.redirectToAuthServer(redirect);
@@ -132,8 +136,12 @@ class AuthService {
 
   // PRIVATE PARTS
 
-  private setToken(access_token: string, fromCallback = false) {
-    DOM.localStorage.setItem(_tokenKey, access_token);
+  private setToken(access_token: string | null, fromCallback = false) {
+    if (access_token === null) {
+      DOM.localStorage.removeItem(_tokenKey);
+    } else {
+      DOM.localStorage.setItem(_tokenKey, access_token);
+    }
     this.token = new JwtToken(access_token, fromCallback);
     DOM.dispatchEvent(new CustomEvent('auth.changed'));
   }
@@ -165,5 +173,7 @@ class AuthService {
 }
 
 const authService = new AuthService();
+(globalThis as any).authService = authService;
+
 
 export { authService };
