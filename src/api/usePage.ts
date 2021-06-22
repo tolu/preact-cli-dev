@@ -1,6 +1,4 @@
-import { useEffect } from "preact/hooks";
 import { PageBase } from "./usePages";
-import { useCachedState } from "./utils.cache";
 import { useJson } from "./utils.fetch";
 
 export interface Page extends PageBase {
@@ -18,12 +16,7 @@ export interface SwimlaneBase {
 
 export const usePage = (url: string): { page: Page | undefined, error: string | undefined } => {
 
-  const [page, setPage] = useCachedState<Page>(url);
+  const { data, error } = useJson<Page>(url, 5 * 10);
 
-  const { data, error } = useJson<Page>(url, () => page);
-  useEffect(() => {
-    data && setPage(data);
-  }, [data, setPage]);
-
-  return { page, error };
+  return { page: data, error };
 }

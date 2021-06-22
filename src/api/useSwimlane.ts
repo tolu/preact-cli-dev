@@ -1,6 +1,4 @@
-import { useEffect } from "preact/hooks";
 import { SwimlaneBase } from "./usePage";
-import { useCachedState } from "./utils.cache";
 import { useJson } from "./utils.fetch";
 
 interface ReturnValue {
@@ -10,19 +8,11 @@ interface ReturnValue {
 
 export const useSwimlane = (swimlane: SwimlaneBase | undefined): ReturnValue => {
 
-    const cacheKey = swimlane ? `sl.${swimlane.id}` : '';
     const dataUrl = swimlane ? swimlane.link : '';
 
-    const [swimlaneItems, setSwimlane] = useCachedState<SwimlaneItem[]>(cacheKey);
+    const { data, error } = useJson<SwimlaneItem[]>(dataUrl, 5 * 10);
 
-    const { data, error } = useJson<SwimlaneItem[]>(dataUrl, () => swimlaneItems);
-    useEffect(() => {
-        if (data) {
-            setSwimlane(data);
-        }
-    }, [data, setSwimlane]);
-
-    return { swimlaneItems, error };
+    return { swimlaneItems: data, error };
 }
 
 interface SwimlaneItem {

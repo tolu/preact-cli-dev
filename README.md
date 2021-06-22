@@ -6,6 +6,13 @@
 2. Generate certificates with `npm run gen-certs`
 3. Run `npm run serve-https`
 
+
+### ToDo
+
+- [ ] `IntersectionObserver` on swimlane items to report (how good is `lazy+onload`?)
+- [ ] add default TTL on cache service (and move to ServiceWorker?)
+- [ ] Shaka player
+
 ## CLI Commands
 
 * `npm install`: Installs dependencies

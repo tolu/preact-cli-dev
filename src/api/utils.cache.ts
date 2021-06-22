@@ -1,29 +1,35 @@
-import { useCallback, useEffect, useState } from "preact/hooks";
+import { useCallback, useState } from "preact/hooks";
 import { getLogger } from "../modules/logger";
 import localforage from 'localforage';
 
-type Item<T> = { value?: T };
+type Item<T> = { value?: T, exp?: number };
 const log = getLogger('cache');
 
-// TODO: replace localStorage/sessionStorage with localforage and set actual TTL
-
-export const useCachedState = <T>(key: string): [T|undefined, (value: T) => void] => {
+export const useCachedState = <T>(key: string, ttlSeconds: number): [() => Promise<T|undefined>, (value: T) => void] => {
   const [cacheValue, setCacheValue] = useState<Item<T>>({});
 
-  useEffect(() => {
-    (async () => {
-      const data = await localforage.getItem<Item<T>>(key);
-      data && setCacheValue(data);
-    })();
-  }, [key]);
+  const getCachedValue = useCallback(async () => {
+    if (ttlSeconds === 0) {
+      return undefined;
+    }
+    if (cacheValue.value) {
+      return cacheValue.value;
+    }
+    const data = await localforage.getItem<Item<T>>(key);
+    if (data && (data.exp || 0) > Date.now()) {
+      setCacheValue(data);
+      return data.value;
+    }
+    return undefined;
+  }, [cacheValue.value, key, ttlSeconds]);
   
   const setCacheValueExternal = useCallback(async (value: T) => {
     if (cacheValue.value === value) return;
     
     log.debug('update cached value', {key, value});
-    await localforage.setItem(key, { value });
+    await localforage.setItem<Item<T>>(key, { value, exp: Date.now() + ttlSeconds*1000 });
     setCacheValue({ value });
-  }, [setCacheValue, cacheValue, key]);
+  }, [setCacheValue, cacheValue, key, ttlSeconds]);
 
-  return [cacheValue.value, setCacheValueExternal];
+  return [getCachedValue, setCacheValueExternal];
 }
