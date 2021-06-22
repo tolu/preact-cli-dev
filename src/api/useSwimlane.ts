@@ -15,7 +15,7 @@ export const useSwimlane = (swimlane: SwimlaneBase | undefined): ReturnValue => 
     return { swimlaneItems: data, error };
 }
 
-interface SwimlaneItem {
+export interface SwimlaneItem {
     id: string;
     name: string;
     imagePackUri: string; // "https://imageservice.rikstv.no/imagepack/5D5A221C673FBBC8E5D5DB4115537DC1.jpg-5D5A221C673FBBC8E5D5DB4115537DC1.jpg-5D5A221C673FBBC8E5D5DB4115537DC1.jpg",
