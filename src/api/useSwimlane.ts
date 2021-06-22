@@ -92,7 +92,7 @@ interface SwimlaneItem {
         details: {
             href: string; // "https://api-pt.uat.rikstv.no/client/2/title/11299733"
         };
-        series: {
+        series?: {
             href: string; // "https://api-pt.uat.rikstv.no/client/2/series/333462/"
         };
         nextEpisode: {

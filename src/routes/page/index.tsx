@@ -36,15 +36,17 @@ const Swimlane: FunctionalComponent<{ swimlane: SwimlaneBase}> = ({swimlane}) =>
     return (
         <section>
             <h2>{swimlane.name}</h2>
-            <ul class={style.swimlane}>
+            <ul class={style.scroller} role="list">
                 { swimlaneItems.map(i => (
-                    <li key={i.id} class={ style['swimlane-item'] }>
-                        <figure>
-                            <picture>
-                                <img src={i.imagePackUri || i.originChannel._links.placeholderImage.href} loading="lazy" />
-                            </picture>
-                            <figcaption>{i.name}</figcaption>
-                        </figure>
+                    <li key={i.id} class={ style['scroller-item'] }>
+                        <a href={`/watch/${i.seriesId ?? i.id}`}>
+                            <figure>
+                                <picture>
+                                    <img src={i.imagePackUri || i.originChannel._links.placeholderImage.href} loading="lazy" />
+                                </picture>
+                                <figcaption>{i.name}</figcaption>
+                            </figure>
+                        </a>
                     </li>
                 )) }
             </ul>
