@@ -15,7 +15,7 @@ const Profile: FunctionalComponent<Props> = (props: Props) => {
     const swimlanes = page?.swimlanes.filter(s => s.name !== 'På TV nå').slice(0, 5) ?? [];
 
     return (
-        <div class={style.profile}>
+        <div class={style.page}>
             <h1>Page: {basePage.name}</h1>
             { pageError && <p>Something went wrong: {pageError}</p> }
             { !pageError && !page && <p>Loading...</p> }
