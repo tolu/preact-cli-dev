@@ -3,3 +3,56 @@
 	min-height: 100%;
 	width: 100%;
 }
+
+.swimlane {
+	display: grid;
+	gap: 0.75rem;
+	grid-auto-flow: column;
+	overflow-x: auto;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+
+	/* hide scrollbars */
+	/*  - in Firefox */
+  overflow: -moz-scrollbars-none;
+  scrollbar-width: none;
+	/*  - in IE */
+  -ms-overflow-style: none;
+}
+/* - in Safari, Chrome, Edge */
+.swimlane::-webkit-scrollbar { 
+	width: 0 !important;
+	display: none;
+}
+
+.swimlane-item {
+	display: inline-block;
+}
+.swimlane-item figure {
+	display: grid;
+	margin: 0;
+	cursor: pointer;
+  user-select: none;
+}
+.swimlane-item picture {
+	inline-size: 33vw;
+	aspect-ratio: 16/9;
+}
+.swimlane-item img {
+	inline-size: 100%;
+	block-size: 100%;
+	object-fit: cover;
+	cursor: grab;
+
+	border-radius: 1ch;
+  overflow: hidden;
+
+	/* pre lazy load */
+	background-image: 
+		linear-gradient(
+			to bottom, 
+			hsl(0 0% 40%), 
+			hsl(0 0% 20%)
+		);
+}

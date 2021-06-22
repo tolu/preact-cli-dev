@@ -4,6 +4,8 @@ import { getLogger } from "../modules/logger";
 type Item<T> = { value?: T };
 const log = getLogger('cache');
 
+// TODO: replace localStorage/sessionStorage with localforage and set actual TTL
+
 export const useCachedState = <T>(key: string, storage: Storage): [T|undefined, (value: T) => void] => {
   const [cacheValue, setCacheValue] = useState<Item<T>>(JSON.parse(storage.getItem(key) ?? '{}'));
   

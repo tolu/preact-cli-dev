@@ -6,6 +6,7 @@ export const useJson = <T>(url: string, getFromCache?: () => T|undefined): { dat
   const [error, setError] = useState<string|undefined>( undefined );
 
   useEffect(() => {
+    if (!url) return;
     if (data) return;
 
     const controller = new AbortController();
