@@ -1,5 +1,4 @@
 import { useEffect } from "preact/hooks";
-import { DOM } from "../modules/DOM";
 import { useCachedState } from "./utils.cache";
 import { useJson } from "./utils.fetch";
 
@@ -13,7 +12,7 @@ export interface PageBase {
 
 export const usePages = (): { pages: PageBase[] | undefined, error: string | undefined } => {
 
-  const [pages, setPages] = useCachedState<PageBase[]>('app.pages', DOM.sessionStorage);
+  const [pages, setPages] = useCachedState<PageBase[]>('app.pages');
 
   const { data, error } = useJson<PageBase[]>('https://contentlayout.test.rikstv.no/1/pages', () => pages);
   useEffect(() => {

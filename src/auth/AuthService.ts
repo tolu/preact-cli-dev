@@ -172,8 +172,9 @@ class AuthService {
   }
 }
 
+type ExtendedGlobal = typeof globalThis & { authService: typeof authService };
 const authService = new AuthService();
-(globalThis as any).authService = authService;
+(globalThis as ExtendedGlobal).authService = authService;
 
 
 export { authService };

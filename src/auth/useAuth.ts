@@ -4,9 +4,13 @@ import { getLogger } from "../modules/logger";
 import { authService } from "./AuthService";
 
 const log = getLogger('auth');
+interface AuthState {
+  token: string;
+  isLoggedIn: boolean;
+}
 
-export const useAuth = () => {
-  const [user, setUser] = useState({
+export const useAuth = (): AuthState => {
+  const [user, setUser] = useState<AuthState>({
     token: authService.getToken(),
     isLoggedIn: authService.isLoggedIn(),
   });
