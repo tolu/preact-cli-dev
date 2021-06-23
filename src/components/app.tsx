@@ -12,6 +12,7 @@ import { usePages } from '../api/usePages';
 import { UserContext } from '../auth/UserContext';
 import { useAuth } from '../auth/useAuth';
 import { DOM } from '../modules/DOM';
+import VideoPage from '../routes/watch';
 
 const log = getLogger('app');
 
@@ -51,6 +52,7 @@ const App: FunctionalComponent = () => {
                     <Route path={`/page/${p.slug}`} component={Page} page={p} key={p.slug} />
                     
                     ))}
+                    <Route path="/watch/:itemId" component={VideoPage} />
                     { error && !pages && <NotFoundPage default /> }
                 </Router>
             </UserContext.Provider>

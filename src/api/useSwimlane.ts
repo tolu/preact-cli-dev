@@ -52,8 +52,8 @@ export interface SwimlaneItem {
     // publishFromUtc: "2021-06-22T01:55:00Z",
     // publishToUtc: "2021-06-29T01:55:00Z",
     // broadcastId: "333462020150",
-    season: number;
-    episode: number;
+    season?: number;
+    episode?: number;
     episodeCount: number;
     seriesId: string; // "333462",
     productionYear: number;

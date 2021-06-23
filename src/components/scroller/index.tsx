@@ -4,6 +4,7 @@ import { useSwimlane, SwimlaneItem } from '../../api/useSwimlane';
 import style from './style.css';
 import utils from './../utils.css';
 import { useCallback } from 'preact/hooks';
+import { Link } from 'preact-router';
 
 const join = (...args: string[]) => args.join(' ');
 
@@ -29,20 +30,27 @@ export const Scroller: FunctionalComponent<{ swimlane: SwimlaneBase }> = ({ swim
 };
 
 const ScrollerItem: FunctionalComponent<{ item: SwimlaneItem }> = ({ item }) => {
-    const link = `/watch/${item.seriesId ?? item.id}`;
+    const link = `/watch/${item.id}`;
     const img = item.imagePackUri || item.originChannel._links.placeholderImage.href;
     return (
         <li key={item.id} class={style['scroller-item']}>
-            <a href={link}>
+            <Link href={link}>
                 <figure>
                     <picture>
                         <img src={img} loading="lazy" />
                     </picture>
-                    <figcaption>{item.name}</figcaption>
+                    <figcaption>{getTitle(item)}</figcaption>
                 </figure>
-            </a>
+            </Link>
         </li>
     )
+}
+const padStart = (val: number, maxLength = 2, filler = '0') => `${val}`.padStart(maxLength, filler);
+const getTitle = ({seriesName, name, season = 0, episode = 0}: SwimlaneItem) => {
+    if (seriesName && season > 1 && episode > 1) {
+        return `${seriesName} S${padStart(season)}E${padStart(episode)}`;
+    }
+    return seriesName || name;
 }
 
 /* extend global to store state of current focused element in ul-element */

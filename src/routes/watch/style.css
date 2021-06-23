@@ -1,0 +1,9 @@
+.video {
+  aspect-ratio: 16/9;
+  width: 100%;
+  /* while loading */
+  background-image:
+		linear-gradient(to bottom,
+			hsl(0 0% 40%),
+			hsl(0 0% 20%));
+}

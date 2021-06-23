@@ -16,7 +16,8 @@ CSS modules are only watched in `/components` so any attempt to put them outside
 
 - [ ] `IntersectionObserver` on swimlane items to report (how good is `lazy+onload`?)
 - [ ] add default TTL on cache service (and move to ServiceWorker?)
-- [ ] Shaka player
+- [ ] iterate over cache items and evict on init/idle
+- [ ] Shaka player 🤝
 
 ## CLI Commands
 

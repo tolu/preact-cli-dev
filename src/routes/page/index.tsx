@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from 'preact';
 import { usePage } from '../../api/usePage';
 import { PageBase } from '../../api/usePages';
 import { Scroller } from '../../components/scroller';
-import style from './style.css';
+import style from './../../components/utils.css';
 interface Props {
     page: PageBase;
 }
