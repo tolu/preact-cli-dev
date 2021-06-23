@@ -18,6 +18,7 @@ CSS modules are only watched in `/components` so any attempt to put them outside
 - [ ] add default TTL on cache service (and move to ServiceWorker?)
 - [ ] iterate over cache items and evict on init/idle
 - [ ] Shaka player 🤝
+- [ ] reveal player poster-image once loaded
 
 ## CLI Commands
 
