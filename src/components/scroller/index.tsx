@@ -21,8 +21,8 @@ export const Scroller: FunctionalComponent<{ swimlane: SwimlaneBase }> = ({ swim
 
     return (
         <section class={join(style['scroller-container'], utils['full-width'])}>
-            <h2>{swimlane.name}: {swimlaneItems.length}</h2>
-            <ul class={style.scroller} role="list" onKeyDown={handleKeyboard} onFocus={handleFocus}>
+            <h2>{swimlane.name}<span aria-hidden={true}>: {swimlaneItems.length}</span></h2>
+            <ul class={style.scroller} role="list" onKeyDown={handleKeyboard} onFocus={handleFocus} aria-label={swimlane.name}>
                 {swimlaneItems.map(i => <ScrollerItem item={i} key={i.id} />)}
             </ul>
         </section>
