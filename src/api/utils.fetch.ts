@@ -3,16 +3,17 @@ import { sessionId, deviceId } from "../modules/uuid";
 import { getLogger } from "../modules/logger";
 import { useCachedState } from "./utils.cache";
 import { authService } from "../auth/AuthService";
+import { proxyRewrite } from "../proxyConfig";
 
 const log = getLogger('cache');
 
 type Options = number | { ttlSeconds: number, secure: boolean };
 
-export const useJson = <T>(url: string, options: Options = { ttlSeconds: 0, secure: false }): { data: T | undefined, error: string | undefined } => {
-
+export const useJson = <T>(_url: string, options: Options = { ttlSeconds: 0, secure: false }): { data: T | undefined, error: string | undefined } => {
   const { ttlSeconds, secure } =  typeof options === 'number'
     ? { ttlSeconds: options, secure: false }
     : options;
+  const url = proxyRewrite(_url);
 
   const [getCachedData, setCachedData] = useCachedState<T>(url, ttlSeconds);
   const [data, setData] = useState<T|undefined>( undefined );

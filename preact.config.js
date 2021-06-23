@@ -2,6 +2,7 @@ import webpack from 'webpack';
 import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { webpackProxy } from './src/proxyConfig'
 
 const config = dotenv.config();
 const localConfig = dotenv.config({ path: './.env.local' });
@@ -20,5 +21,6 @@ module.exports = function (/** @type {import('webpack').Configuration} */config)
       key: readFileSync(path.join(__dirname, '/certs/key.pem')),
       cert: readFileSync(path.join(__dirname, '/certs/cert.pem')),
     },
+    proxy: webpackProxy
   });
 }

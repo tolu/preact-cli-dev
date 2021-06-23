@@ -1,5 +1,5 @@
 import localforage from 'localforage';
-import { FunctionalComponent, h } from 'preact';
+import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { SwimlaneItem } from '../../api/useSwimlane';
 import { useJson } from '../../api/utils.fetch';
@@ -16,7 +16,7 @@ const delay = (time = 250) => new Promise(resolve => setTimeout(resolve, time));
 const VideoPage: FunctionalComponent<Props> = ({ itemId }: Props) => {
   const [cache, setCache] = useState<SwimlaneItem | null>(null);
   const { data, error: detailsError } = useJson<ItemDetails>(cache?._links.details.href ?? '');
-  const { data: play, error: playError } = useJson<ItemDetails>(data?._links.playDash.href ?? '', { secure: true, ttlSeconds: 60 });
+  const { data: play, error: playError } = useJson<VideoDetails>(data?._links.playDash.href ?? '', { secure: true, ttlSeconds: 60 });
 
   const error = detailsError || playError;
 
@@ -50,12 +50,31 @@ const VideoPage: FunctionalComponent<Props> = ({ itemId }: Props) => {
       <video class={style.video} poster={posterUrl} controls={!!posterUrl} />
       <p>{description}</p>
       { error && <pre>{error}</pre> }
-      { play && <pre>{play}</pre> }
+      { play && <DataList data={play} /> }
     </div>
   );
 };
 
+const DataList: FunctionalComponent<{data: Record<string, any>}> = ({data}) => {
+  const entries = Object.entries(data);
+  return (
+    <dl>{ entries.map(([key, value]) => (
+      <Fragment key={key}>
+        <dt><strong>{key}</strong></dt>
+        <dd>{value?.toString()}</dd>
+      </Fragment>
+    )) }</dl>
+  );
+}
+
 export default VideoPage;
+
+interface VideoDetails {
+  mediaFormat: 'widevine' | 'playready' | 'fairplay';
+  protocol: 'DASH' | 'HLS';
+  manifestUrl: string;
+  licenseUrl: string;
+}
 
 interface ItemDetails {
   id: string;
