@@ -14,9 +14,9 @@ CSS modules are only watched in `/components` so any attempt to put them outside
 
 ### ToDo
 
-- [ ] `IntersectionObserver` on swimlane items to report (how good is `lazy+onload`?)
+- [x] `IntersectionObserver` on swimlane items to report (how good is `lazy+onload`?)
 - [ ] add default TTL on cache service (and move to ServiceWorker?)
-- [ ] iterate over cache items and evict on init/idle
+- [ ] iterate over cache items and evict on init/[idle][IdleCallback]
 - [ ] Shaka player 🤝
 - [ ] reveal player poster-image once loaded
 
@@ -37,3 +37,5 @@ CSS modules are only watched in `/components` so any attempt to put them outside
   your tests
 
 For detailed explanation on how things work, checkout the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
+
+[IdleCallback]: https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback
