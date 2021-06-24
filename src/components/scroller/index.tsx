@@ -1,14 +1,16 @@
 import { FunctionalComponent, h } from 'preact';
 import { SwimlaneBase } from '../../api/usePage';
 import { useSwimlane, SwimlaneItem } from '../../api/useSwimlane';
-import { useCallback, useEffect, useRef } from 'preact/hooks';
+import { useCallback, useRef } from 'preact/hooks';
 import { Link } from 'preact-router';
 import { ulFocusHandler, ulKeyDownHandler } from './eventHandlers';
+import { useObserver } from '../../modules/useObserver';
 import style from './style.css';
 import utils from './../utils.css';
-import { useObserver } from '../../modules/useObserver';
+import { getLogger } from '../../modules/logger';
 
 const join = (...args: string[]) => args.join(' ');
+const log = getLogger('analytics');
 
 export const Scroller: FunctionalComponent<{ swimlane: SwimlaneBase }> = ({ swimlane }) => {
     const { swimlaneItems = [], error: swimlaneError } = useSwimlane(swimlane);
@@ -19,7 +21,7 @@ export const Scroller: FunctionalComponent<{ swimlane: SwimlaneBase }> = ({ swim
         // observe
         const visibleItems = entries.filter(e => e.isIntersecting);
         if (visibleItems.length > 0) {
-            console.log('log impression for', visibleItems.map(e => e.target));
+            log.debug('log impression for', visibleItems.map(e => e.target));
             visibleItems.forEach(e => observer.unobserve(e.target));
         }
     }, [swimlane.id]);
