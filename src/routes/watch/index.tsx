@@ -3,6 +3,7 @@ import { Fragment, FunctionalComponent, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { SwimlaneItem } from '../../api/useSwimlane';
 import { useJson } from '../../api/utils.fetch';
+import { useShakaPlayer } from '../../modules/useShakaPlayer';
 import utilCss from './../../components/utils.css';
 import style from './style.css';
 
@@ -16,7 +17,8 @@ const delay = (time = 250) => new Promise(resolve => setTimeout(resolve, time));
 const VideoPage: FunctionalComponent<Props> = ({ itemId }: Props) => {
   const [cache, setCache] = useState<SwimlaneItem | null>(null);
   const { data, error: detailsError } = useJson<ItemDetails>(cache?._links.details.href ?? '');
-  const { data: play, error: playError } = useJson<VideoDetails>(data?._links.playDash.href ?? '', { secure: true, ttlSeconds: 60 });
+  const { data: play, error: playError } = useJson<VideoDetails>(data?._links.playDash?.href ?? '', { secure: true, ttlSeconds: 60 });
+  const player = useShakaPlayer();
 
   const error = detailsError || playError;
 
@@ -36,7 +38,7 @@ const VideoPage: FunctionalComponent<Props> = ({ itemId }: Props) => {
         }
       }
     })();
-  }, [itemId, cache]);
+  }, [itemId, cache, play]);
 
   const {
     name: title = '…',
